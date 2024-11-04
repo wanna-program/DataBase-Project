@@ -1,0 +1,75 @@
+--SQLite
+-- Property Listings Table
+CREATE TABLE Property (
+    property_id INTEGER PRIMARY KEY,       -- Unique ID for each property
+    property_type TEXT,                    -- Type of property (e.g., apartment, office)
+    location_address TEXT,                 -- Address of the property
+    city TEXT,                             -- City where the property is located
+    zip_code TEXT,                         -- Postal code
+    size_sqft INTEGER,                     -- Size in square feet
+    num_rooms INTEGER,                     -- Number of rooms
+    features TEXT,                         -- Special features (e.g., pool, garden)
+    availability_status TEXT,              -- Status (e.g., available, sold, rented)
+    price REAL                             -- Sale price or rental rate
+);
+
+-- Client Management Table
+CREATE TABLE Client (
+    client_id INTEGER PRIMARY KEY,         -- Unique ID for each client
+    client_type TEXT,                      -- Type of client (e.g., buyer, seller)
+    name TEXT,                             -- Name of the client
+    phone TEXT,                            -- Phone number
+    email TEXT,                            -- Email address
+    address TEXT,                          -- Client's address
+    preferences TEXT,                      -- Preferences for property (e.g., location, type)
+    interaction_notes TEXT                 -- Notes on interactions with the client
+);
+
+-- Agent and Employee Tracking Table
+CREATE TABLE Agent (
+    agent_id INTEGER PRIMARY KEY,          -- Unique ID for each agent
+    name TEXT,                             -- Name of the agent
+    phone TEXT,                            -- Phone number
+    email TEXT,                            -- Email address
+    performance_metrics TEXT,              -- Performance details
+    commission_rate REAL                   -- Commission rate for the agent
+);
+
+-- Transaction Management Table
+CREATE TABLE Transaction (
+    transaction_id INTEGER PRIMARY KEY,    -- Unique ID for each transaction
+    transaction_type TEXT,                 -- Type of transaction (e.g., sale, rental)
+    property_id INTEGER,                   -- ID of the property involved
+    client_id INTEGER,                     -- ID of the client involved
+    agent_id INTEGER,                      -- ID of the agent handling it
+    sale_price REAL,                       -- Sale price (if applicable)
+    rental_fee REAL,                       -- Rental fee (if applicable)
+    commission_amount REAL,                -- Commission for the agent
+    payment_schedule TEXT,                 -- Payment details
+    transaction_status TEXT,               -- Status (e.g., in-progress, completed)
+    
+    FOREIGN KEY (property_id) REFERENCES Property(property_id),
+    FOREIGN KEY (client_id) REFERENCES Client(client_id),
+    FOREIGN KEY (agent_id) REFERENCES Agent(agent_id)
+);
+
+-- Agent and Property Assignment Table
+CREATE TABLE AgentProperty (
+    agent_property_id INTEGER PRIMARY KEY, -- Unique ID for each record
+    agent_id INTEGER,                      -- ID of the agent
+    property_id INTEGER,                   -- ID of the property
+    
+    FOREIGN KEY (agent_id) REFERENCES Agent(agent_id),
+    FOREIGN KEY (property_id) REFERENCES Property(property_id)
+);
+
+-- Client-Agent Interaction Table
+CREATE TABLE ClientAgentInteraction (
+    interaction_id INTEGER PRIMARY KEY,    -- Unique ID for each interaction
+    client_id INTEGER,                     -- ID of the client involved
+    agent_id INTEGER,                      -- ID of the agent involved
+    interaction_notes TEXT,                -- Notes on the interaction
+    
+    FOREIGN KEY (client_id) REFERENCES Client(client_id),
+    FOREIGN KEY (agent_id) REFERENCES Agent(agent_id)
+);
